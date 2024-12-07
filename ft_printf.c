@@ -1,9 +1,8 @@
-#include <unistd.h>
-#include <stdarg.h>
+#include <libftprintf.h>
 
-void	ft_putchar_fd(char c, int fd)
+void	ft_putchar(char c)
 {
-	write(fd, &c, 1);
+	write(1, &c, 1);
 }
 
 void	ft_putstr(char *s)
@@ -16,49 +15,6 @@ void	ft_putstr(char *s)
 		s++;
 	}
 }
-
-
-static int	count_digits(int nb)
-{
-	long	n;
-	int		count;
-
-	n = nb;
-	count = 1;
-	if (n < 0)
-		n *= -1;
-	while (n / 10 > 0)
-	{
-		n /= 10;
-		count++;
-	}
-	return (count);
-}
-
-static void	ft_putnbr_fd(int n, int fd)
-{
-	long	nb;
-	int		len;
-	int		digits[11];
-	int		i;
-
-	i = 0;
-	nb = n;
-	if (n < 0)
-	{
-		nb *= -1;
-		write(fd, "-", 1);
-	}
-	len = count_digits(nb);
-	while (len--)
-	{
-		digits[len] = nb % 10;
-		nb /= 10;
-	}
-	while (i < count_digits(n))
-		ft_putchar_fd(digits[i++] + '0', fd);
-}
-
 
 int	ft_printf(const char *fmt, ...)
 {
@@ -75,10 +31,10 @@ int	ft_printf(const char *fmt, ...)
 		if (fmt[i] == '%')
 		{
 			i++;
-			if(fmt[i] == 'd')
+			if(fmt[i] == 'd' || fmt[i] == 'i')
 			{
 				d = va_arg(ap, int);
-				ft_putnbr_fd(d, 1);
+				ft_putnbr_base(d, "0123456789");
 			}
 			else if (fmt[i] == 's')
 			{
@@ -105,5 +61,5 @@ int main()
 {
 	char i;
        	i= 'a';
-	ft_printf("abcdef %d %c\n%s\n", 5, i, "kiki");
+	ft_printf("abcdef %d", 012);
 }
