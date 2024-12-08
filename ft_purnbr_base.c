@@ -6,7 +6,7 @@
 /*   By: amzahir <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/07 18:44:49 by amzahir           #+#    #+#             */
-/*   Updated: 2024/12/07 19:11:16 by amzahir          ###   ########.fr       */
+/*   Updated: 2024/12/08 18:14:59 by amzahir          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	ft_putchar(char c)
 	write (1, &c, 1);
 }
 
-void	ft_putnbr_base(int nb, char *base)
+void	ft_putnbr_base(long nb, char *base, int *size)
 {
 	long	n;
 	int		b_size;	
@@ -34,22 +34,15 @@ void	ft_putnbr_base(int nb, char *base)
 	{
 		n *= -1;
 		write(1, "-", 1);
+		*size++;
 	}
 	i = 0;
 	while (n)
 	{
 		digits[i++] = n % b_size;
 		n /= b_size;
+		*size++;
 	}
 	while (i)
 		ft_putchar(base[digits[--i]]);
-}
-#include <stdio.h>
-int main()
-{
-	int i = -1;
-	unsigned int u;
-	u = (unsigned int)i;
-	printf("%d\n", u);
-	ft_putnbr_base(u, "0123456789");
 }

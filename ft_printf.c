@@ -15,51 +15,45 @@ void	ft_putstr(char *s)
 		s++;
 	}
 }
+void chi_7aja (const char *fmt)
+{
+			if (*fmt == 'd' || *fmt == 'i')
+				ft_putnbr_base(va_arg(ap, int), "0123456789", &size);
+			else if (*fmt == 'u')
+				ft_putnbr_base((unsigned int)va_arg(ap, int), "0123456789", &size);
+			else if (*fmt == 's')
+				ft_putstr(va_arg(ap, char *));
+			else if (*fmt == 'p')
+				ft_putnbr_base((void)va_arg(ap, void *), "0123456789abcdef", &size);
+			else if (*fmt == 'c')
+				ft_putchar((char)va_arg(ap, int));
+			else if (*fmt == 'x')
+				ft_putnbr_base((unsigned int)va_arg(ap, unsigned int), "0123456789abcdef", &size);
+			else if (*fmt == 'X')
+				ft_putnbr_base((unsigned int)va_arg(ap, unsigned int), "0123456789ABCDEF", &size);
+			else if (*fmt == '%')
+				write(1, "%", 1);
+}
 
 int	ft_printf(const char *fmt, ...)
 {
 	va_list	ap;
-	int	d;
-	char	*s;
-	char	c;
-	int	i;
-
-	i = 0;
+	int	size;
+	
+	size = 0;	
 	va_start(ap, fmt);
-	while(fmt[i])
+	while(*fmt)
 	{
-		if (fmt[i] == '%')
+		if (*fmt == '%')
 		{
-			i++;
-			if(fmt[i] == 'd' || fmt[i] == 'i')
-			{
-				d = va_arg(ap, int);
-				ft_putnbr_base(d, "0123456789");
-			}
-			else if (fmt[i] == 's')
-			{
-				s = va_arg(ap, char *);
-				ft_putstr(s);
-			}
-			else if (fmt[i] == 'c')
-			{
-				c = (char)va_arg(ap, int);
-				write(1, &c, 1);
-			}
-			else
-				write(1, "%", 1);
+			fmt++;		
+			chi_7aja(fmt, 
 		}
 		else
-			write(1, &fmt[i], 1);
-		i++;
+			write(1, *fmt, 1);
+		fmt++;
+		size++;
 	}
 	va_end(ap);
-	return (i);
-}
-#include <stdio.h>
-int main()
-{
-	char i;
-       	i= 'a';
-	ft_printf("abcdef %d", 012);
+	return (size);
 }
