@@ -6,18 +6,36 @@
 /*   By: amzahir <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/09 21:59:39 by amzahir           #+#    #+#             */
-/*   Updated: 2025/01/14 06:29:24 by amzahir          ###   ########.fr       */
+/*   Updated: 2025/01/14 22:17:33 by amzahir          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libftprintf.h"
+#include "ft_printf.h"
 
-int	ft_putchar(char c)
+void	ft_putptr(unsigned long p, char *base, int **size)
 {
+	int	b_size;	
+	int	digits[50];
 	int	i;
 
-	i = write(1, &c, 1);
-	return (i);
+	if (!p)
+	{
+		(**size) += write(1, "(nil)", 5);
+		return ;
+	}
+	(**size) += write(1, "0x", 2);
+	b_size = 0;
+	while (base[b_size])
+		b_size++;
+	i = 0;
+	while (p)
+	{
+		digits[i++] = p % b_size;
+		p /= b_size;
+		(**size)++;
+	}
+	while (i)
+		write(1, base + digits[--i], 1);
 }
 
 int	ft_putstr(char *s)
@@ -42,7 +60,7 @@ void	ft_putnbr_base(long long nb, char *base, int **size)
 {
 	long long	n;
 	int			b_size;	
-	int			digits[20];
+	int			digits[50];
 	int			i;
 
 	b_size = 0;
@@ -64,12 +82,12 @@ void	ft_putnbr_base(long long nb, char *base, int **size)
 		(**size)++;
 	}
 	while (i)
-		ft_putchar(base[digits[--i]]);
+		write(1, base + digits[--i], 1);
 }
 
 void	check_format(const char *fmt, va_list ap, int *size)
 {
-	void	*p;
+	char	c;
 
 	if (*fmt == 'd' || *fmt == 'i')
 		ft_putnbr_base(va_arg(ap, int), "0123456789", &size);
@@ -78,18 +96,13 @@ void	check_format(const char *fmt, va_list ap, int *size)
 	else if (*fmt == 's')
 		(*size) += ft_putstr(va_arg(ap, char *));
 	else if (*fmt == 'p')
-	{
-		p = va_arg(ap, void *);
-		if (!p)
-		{
-			(*size) += write(1, "(nil)", 5);
-			return ;
-		}
-		(*size) += write(1, "0x", 2);
-		ft_putnbr_base((unsigned long)p, "0123456789abcdef", &size);
-	}
+		ft_putptr((unsigned long) va_arg(ap, void *),
+			"0123456789abcdef", &size);
 	else if (*fmt == 'c')
-		(*size) += ft_putchar((char)va_arg(ap, int));
+	{
+		c = (char)(va_arg(ap, int));
+		(*size) += write(1, &c, 1);
+	}
 	else if (*fmt == 'x')
 		ft_putnbr_base(va_arg(ap, unsigned int), "0123456789abcdef", &size);
 	else if (*fmt == 'X')
@@ -123,12 +136,4 @@ int	ft_printf(const char *fmt, ...)
 	}
 	va_end(ap);
 	return (size);
-}
-
-#include <stdio.h>
-int main()
-{
-	char	*i;	
-	printf("%d\n", ft_printf("%s ", 0));
-	printf("%d\n", printf("%s ", 0));
 }

@@ -6,7 +6,7 @@
 #    By: amzahir <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/14 03:12:17 by amzahir           #+#    #+#              #
-#    Updated: 2025/01/14 03:34:28 by amzahir          ###   ########.fr        #
+#    Updated: 2025/01/14 21:24:24 by amzahir          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ CFLAGS = -Wall -Wextra -Werror
 
 NAME = libftprintf.a 
 
-DEP = libftprintf.h
+DEP = ft_printf.h
 
 all: $(NAME)
 
